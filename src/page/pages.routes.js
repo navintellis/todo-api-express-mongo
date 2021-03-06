@@ -5,4 +5,5 @@ module.exports=function (router) {
     router.get('/pages', Pages.getAllPages);
     router.get('/page/:pageId', Pages.getPageDetails);
     router.delete('/page/:pageId', Pages.deletePage);
+    router.put('/page/:pageId/task', Pages.manageTaskInPage);
 }

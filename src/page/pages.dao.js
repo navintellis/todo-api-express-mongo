@@ -13,13 +13,13 @@ pagesSchema.statics={
         this.find({},cb);
      },
      getPageById:function({_id}, cb){
-         this.find({_id},cb);
+         this.findOne({_id},cb);
      },
      updatePageName:function({_id}, {pageName}, cb){
-        this.findOneAndUpdate({_id},{$set:{pageName}},cb); 
+        this.findOneAndUpdate({_id},{$set:{pageName}}, {new:true}, cb); 
      },
      updateTasks:function(tasks, {_id}, cb) {
-        this.findOneAndUpdate({_id},{$set:{tasks}},cb);
+        this.findOneAndUpdate({_id},{$set:{tasks}}, {new:true}, cb);
      }
 };
 

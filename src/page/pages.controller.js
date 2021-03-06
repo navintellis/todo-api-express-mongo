@@ -75,45 +75,46 @@ exports.updatePageName = (req, res, next) => {
 
 exports.manageTaskInPage = (req, res, next) => {
     const {pageId: _id} = req.params;
-    const {taskId:id, task: description, isCompleted}=req.body;
-    const uuid = uuidv1();
+    const {taskId, task: description, isCompleted}=req.body;
     Pages.getPageById({_id},(error, inputPage) => {
         if(error){
             res.json({error});
             return
         }
-        const page= {...inputPage} ;
+        const page= inputPage.toJSON();
         page.tasks= page.tasks || [];
-        const taskFound=false;
-        if(id){
-            page.tasks.map((inputTask) => {
+        if(taskId){
+            let taskFound=true;
+            page.tasks = page.tasks.map((inputTask) => {
                 let task={...inputTask};
-               if(inputTask.id === id){
+               if(inputTask._id.toString() === taskId){
                    taskFound=true;
                    if( description ) task.description=description;
                    if( typeof isCompleted !== 'undefined' && isCompleted != null) task.isCompleted = isCompleted; 
+               } else {
+                   taskFound=false;
                }
-            })
+               return task;
+            });
+            if(!taskFound){
+                res.json({
+                    error: new Error('Task not found for given task id')
+                });
+                return;
+            }
         } else {
             page.tasks.push({
-                id:uuid,
                 description,
                 isCompleted: false,
             });
         }
-        if(taskFound){
-            res.json({
-                error: new Error('Task not found for given task id')
-            });
-            return 
-        }
-        Pages.updateTasks(page.tasks, {_id}, (updateError, page) => {
+        Pages.updateTasks(page.tasks, {_id}, (updateError, updatedPage) => {
            if(updateError){
                res.json(updateError);
            }
            res.json({
                message:'Task has been added successfully',
-               page,
+               page:updatedPage,
            });
         });
     });
