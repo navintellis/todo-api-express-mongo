@@ -84,16 +84,14 @@ exports.manageTaskInPage = (req, res, next) => {
         const page= inputPage.toJSON();
         page.tasks= page.tasks || [];
         if(taskId){
-            let taskFound=true;
+            let taskFound=false;
             page.tasks = page.tasks.map((inputTask) => {
                 let task={...inputTask};
                if(inputTask._id.toString() === taskId){
                    taskFound=true;
                    if( description ) task.description=description;
                    if( typeof isCompleted !== 'undefined' && isCompleted != null) task.isCompleted = isCompleted; 
-               } else {
-                   taskFound=false;
-               }
+               } 
                return task;
             });
             if(!taskFound){
@@ -119,3 +117,28 @@ exports.manageTaskInPage = (req, res, next) => {
         });
     });
 }
+
+exports.deleteTaskInPage=(req,res,next) => {
+    const {pageId, taskId} = req.params;
+    Pages.getPageById({_id:pageId}, (error, pageResult) => {
+        if(error){
+            res.json(error);
+        }
+        const page = pageResult.toJSON();
+        let taskFound=false;
+        const pageTaskCount=page.tasks.length;
+        page.tasks=page.tasks.filter((task) => (task._id.toString() !== taskId));
+        if(pageTaskCount === page.tasks.length){
+            res.json(new Error('Task not found'));
+        }
+        Pages.updateTasks(page.tasks, {_id:pageId}, (error, updatedPage) => {
+            if(error){
+                res.json(error);
+            }
+            res.json({
+                message:"Task deleted successfully",
+                page:updatedPage,
+            });
+        })
+    });
+};
