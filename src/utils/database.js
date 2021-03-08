@@ -1,7 +1,7 @@
 // require mongoose
 const mongoose = require('mongoose');
 const chalk = require('chalk');
-const dbUrl = require('./properties').DB;
+const { DB:dbUrl } = require('../../config');
 
 const connected = chalk.bold.cyan;
 const error = chalk.bold.yellow;

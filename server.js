@@ -2,8 +2,8 @@ const express=require('express');
 const bodyParser = require('body-parser');
 const log = require('morgan')('dev');
 
-const properties=require('./src/config/properties');
-const db=require('./src/config/database');
+const {PORT}=require('./config');
+const db=require('./src/utils/database');
 
 const pagesRouter=require('./src/page/pages.routes');
 const app = express();
@@ -37,6 +37,6 @@ app.use('/api', router);
 // call heros routing
 pagesRouter(router);
 
-app.listen(properties.PORT, (req, res) => {
-    console.log(`Server is running on ${properties.PORT} port.`);
+app.listen(PORT, (req, res) => {
+    console.log(`Server is running on ${PORT} port.`);
 })
