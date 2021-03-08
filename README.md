@@ -18,5 +18,12 @@ Simple Implementation api for Todo App in express JS with mongo db
       * description
       * isCompleted 
 
+### How to run:
+* Create a `.env` file in the root directory with below properties
+  * `PORT` - Port number for express server
+  * `DB` - db connection url 
+* Run `server.js` using node or nodemon
+  * e.g. ```node server.js``` or ```nodemon server.js```
+
 **Credits**
 * Reference taken from - https://vsvaibhav2016.medium.com/create-crud-application-in-express-js-9b88a5a94299
